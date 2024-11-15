@@ -16,8 +16,10 @@ import numpy as np
 # -----------------------------------------------
 
 def compute_output_size_1d(input_array, kernel_array):
-    pass
-
+    input_length = len(input_array)
+    kernel_length = len(kernel_array)
+    out_length = (input_length - kernel_length + 1)
+    return out_length
 
 # -----------------------------------------------
 # Example:
@@ -37,7 +39,14 @@ print(compute_output_size_1d(input_array, kernel_array))
 def convolve_1d(input_array, kernel_array):
     # Tip: start by initializing an empty output array (you can use your function above to calculate the correct size).
     # Then fill the cells in the array with a loop.
-    pass
+    conv = []
+    input_index = 0
+    for i in range(compute_output_size_1d(input_array, kernel_array)):
+        input = input_array[input_index:input_index + len(kernel_array)]
+        result = np.dot(input, kernel_array)
+        conv.append(result)
+        input_index += 1
+    return conv
 
 # -----------------------------------------------
 # Another tip: write test cases like this, so you can easily test your function.
@@ -56,11 +65,12 @@ print(convolve_1d(input_array, kernel_array))
 # -----------------------------------------------
 
 def compute_output_size_2d(input_matrix, kernel_matrix):
-    pass
-
+    input_height, input_width = input_matrix.shape
+    kernel_height, kernel_width = kernel_matrix.shape
+    out_size = (input_height - kernel_height + 1, input_width - kernel_width + 1)
+    return out_size
 
 # -----------------------------------------------
-
 
 # Task 4: 2D Convolution
 # Instructions:
@@ -72,7 +82,16 @@ def compute_output_size_2d(input_matrix, kernel_matrix):
 def convolute_2d(input_matrix, kernel_matrix):
     # Tip: same tips as above, but you might need a nested loop here in order to
     # define which parts of the input matrix need to be multiplied with the kernel matrix.
-    pass
-
-
+    conv = []
+    out_size = compute_output_size_2d(input_matrix, kernel_matrix)
+    input_index = 0
+    for i in range(out_size[0]): # rows
+        row = []
+        for j in range(out_size[1]): # slide horizontally
+            input = input_matrix[i : i + kernel_matrix.shape[0],
+                                 j : j + kernel_matrix.shape[1]]
+            result = np.sum(input * kernel_matrix) # element-wise multiplication followed by summation
+            row.append(result)
+        conv.append(row)
+    return np.array(conv)
 # -----------------------------------------------
